@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "108530016614",
+    "firebase_url": "https://authenticationproject-9dfe6.firebaseio.com",
+    "project_id": "authenticationproject-9dfe6",
+    "storage_bucket": "authenticationproject-9dfe6.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:108530016614:android:5339fafa84b88904",
+        "android_client_info": {
+          "package_name": "sg.edu.rp.webservices.authenticationproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "108530016614-3qis90sroqcc1s5eokbojfme1hrusos6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "sg.edu.rp.webservices.authenticationproject",
+            "certificate_hash": "1b425356edeb0c80f60d8a774738deac92a5caa9"
+          }
+        },
+        {
+          "client_id": "108530016614-q1kilksadqup3ao7do9ugsc6a3oko9om.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD45uwDP4g8Ws9erPZH3GtsSzOS8nHHkWs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "108530016614-q1kilksadqup3ao7do9ugsc6a3oko9om.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
