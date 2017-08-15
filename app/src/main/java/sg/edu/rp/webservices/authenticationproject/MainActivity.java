@@ -15,6 +15,11 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +29,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseAuth.AuthStateListener mAuthListener;
 
-
+    private FirebaseDatabase firebaseDatabase;
+    private DatabaseReference userListRef;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
        // btnRegister = (Button)findViewById(R.id.register);
 
         mAuth = FirebaseAuth.getInstance();
+
         mAuthListener = new FirebaseAuth.AuthStateListener() {
             @Override
             public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
@@ -76,18 +83,35 @@ public class MainActivity extends AppCompatActivity {
                     if (task.isSuccessful()) {
 
                         final FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                        if (user.getUid().equals("")){
+                        firebaseDatabase = FirebaseDatabase.getInstance();
+                        userListRef = firebaseDatabase.getReference("/profiles/" + user.getUid());
 
-                            Toast.makeText(getBaseContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getBaseContext(), SetDisplayName.class);
-                            startActivity(i);
-                        }
-                        else if (!user.getUid().equals("")){
+                        userListRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String userDisplay = dataSnapshot.getValue(String.class);
 
-                            Toast.makeText(getBaseContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getBaseContext(), ChatActivity.class);
-                            startActivity(i);
-                        }
+
+                                if (userDisplay.equalsIgnoreCase("")){
+
+                                    Toast.makeText(getBaseContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getBaseContext(), SetDisplayName.class);
+                                    startActivity(i);
+                                }
+                                else if (!userDisplay.equalsIgnoreCase("")){
+
+                                    Toast.makeText(getBaseContext(), "Registration successful!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getBaseContext(), ChatActivity.class);
+                                    startActivity(i);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
 
                         user.sendEmailVerification().addOnCompleteListener(new OnCompleteListener<Void>() {
                             @Override
@@ -139,18 +163,35 @@ public class MainActivity extends AppCompatActivity {
 
                         FirebaseUser user = mAuth.getCurrentUser();
                         Log.w(TAG, "isEmailVerified ? " + user.isEmailVerified());
-                        if (user.getUid().equals("")){
+                        firebaseDatabase = FirebaseDatabase.getInstance();
+                        userListRef = firebaseDatabase.getReference("/profiles/" + user.getUid());
 
-                            Toast.makeText(getBaseContext(), "Login successful!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getBaseContext(), SetDisplayName.class);
-                            startActivity(i);
-                        }
-                        else if (!user.getUid().equals("")){
+                        userListRef.addValueEventListener(new ValueEventListener() {
+                            @Override
+                            public void onDataChange(DataSnapshot dataSnapshot) {
+                                String userDisplay = dataSnapshot.getValue(String.class);
 
-                            Toast.makeText(getBaseContext(), "Login successful!", Toast.LENGTH_SHORT).show();
-                            Intent i = new Intent(getBaseContext(), ChatActivity.class);
-                            startActivity(i);
-                        }
+
+                                if (userDisplay.equalsIgnoreCase("")){
+
+                                    Toast.makeText(getBaseContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getBaseContext(), SetDisplayName.class);
+                                    startActivity(i);
+                                }
+                                else if (!userDisplay.equalsIgnoreCase("")){
+
+                                    Toast.makeText(getBaseContext(), "Login successful!", Toast.LENGTH_SHORT).show();
+                                    Intent i = new Intent(getBaseContext(), ChatActivity.class);
+                                    startActivity(i);
+                                }
+                            }
+
+                            @Override
+                            public void onCancelled(DatabaseError databaseError) {
+
+                            }
+                        });
+
 
                         //not required for user to verify email
                         /*
@@ -185,8 +226,33 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         if(mAuth.getCurrentUser()!= null){
-            Intent i = new Intent(this, MainActivity.class);
-            startActivity(i);
+            firebaseDatabase = FirebaseDatabase.getInstance();
+            userListRef = firebaseDatabase.getReference("/profiles/" + mAuth.getCurrentUser().getUid());
+
+            userListRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    String userDisplay = dataSnapshot.getValue(String.class);
+
+
+                    if (userDisplay.equalsIgnoreCase("")){
+
+                        Intent i = new Intent(getBaseContext(), SetDisplayName.class);
+                        startActivity(i);
+                    }
+                    else if (!userDisplay.equalsIgnoreCase("")){
+
+                        Intent i = new Intent(getBaseContext(), ChatActivity.class);
+                        startActivity(i);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+
+                }
+            });
+
         }
     }
 
